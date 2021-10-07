@@ -7,6 +7,7 @@
 - [Weekwork7 - ResNet Paper](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A57%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.9.19.md)
 - [Weekwork8 - Pyramid Pooling Module & Code](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A58%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.9.26.md)
 - [Weekwork9 - Closing the Loop for Robotic Grasping Code & Matrix Fast Power](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A59%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.3.md)
+  - [Weekwork10 - More Details about ggcnn Code](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A510%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.10.md)
 
 ## Natural Language Processing
 - [Weekwork1 - Overview of Natural Language Processing & Word Vectors](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A51%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.8.8.md)
