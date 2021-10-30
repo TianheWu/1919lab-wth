@@ -1,0 +1,4 @@
+dataset/*
+
+learn.py
+__pycache__
