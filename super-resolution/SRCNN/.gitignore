@@ -1,4 +1,5 @@
 dataset/*
 
+*.txt
 learn.py
 __pycache__
