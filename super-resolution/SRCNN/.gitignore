@@ -1,6 +1,7 @@
 dataset/*
 output/*
 
+*.jpg
 *.txt
 learn.py
 __pycache__
