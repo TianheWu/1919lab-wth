@@ -22,7 +22,7 @@ def parse_args():
 
     parser.add_argument('--dataset-train', type=str, required=True)
     parser.add_argument('--dataset-test', type=str, required=True)
-    parser.add_argument('--split', type=float, default=0.8)
+    parser.add_argument('--split', type=float, default=0.9)
     parser.add_argument('--outdir', type=str, required=True)
     parser.add_argument('--scale', type=int, default=3)
     parser.add_argument('--lr', type=float, default=1e-4)
@@ -115,7 +115,7 @@ def run():
     in_channels = 1
     net = SRCNN(in_channels=in_channels).to(device)
     criterion = F.mse_loss
-    optimizer = optim.Adam(net.parameters(), lr=args.lr)
+    optimizer = optim.SGD(net.parameters(), lr=args.lr)
     logging.info('Done')
 
     best_result = 0.0
