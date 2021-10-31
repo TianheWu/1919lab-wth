@@ -25,6 +25,7 @@ def parse_args():
     parser.add_argument('--split', type=float, default=0.9)
     parser.add_argument('--outdir', type=str, required=True)
     parser.add_argument('--scale', type=int, default=3)
+    parser.add_argument('--num-channels', type=int, default=3)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--batch-size', type=int, default=16)
     parser.add_argument('--num-epochs', type=int, default=50)
@@ -112,8 +113,7 @@ def run():
     logging.info('Done')
     logging.info('Loading Network...')
     torch.manual_seed(args.seed)
-    in_channels = 1
-    net = SRCNN(in_channels=in_channels).to(device)
+    net = SRCNN(in_channels=args.num_channels).to(device)
     criterion = F.mse_loss
     optimizer = optim.SGD(net.parameters(), lr=args.lr)
     logging.info('Done')

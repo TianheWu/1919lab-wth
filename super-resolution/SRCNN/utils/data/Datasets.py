@@ -75,20 +75,37 @@ class ImageSet(torch.utils.data.Dataset):
         :param img: The image you want to extract.
         :return: The image extracted channel.
         """
-        if channel in ('y', 'cb', 'cr'):
-            img = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-        return img
+        if channel == 'y':
+            ret = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+        elif channel == 'ycrcb':
+            data_y = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+            data_cr = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
+            data_cb = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
+            ret = torch.cat((data_y, data_cr, data_cb), dim=0)
+        else:
+            raise ValueError("Please input right channel between y and ycrcb")
+        return ret
     
     @staticmethod
-    def instead_channel(origin_img, image):
+    def instead_channel(origin_img, image, channel='y'):
         """
         :param img: The image you want to restore.
         :return: The image restored.
         """
         origin_image = ImageSet.bgr2ycbcr(origin_img)
-        for i in range(origin_image.shape[0]):
-            for j in range(origin_image.shape[1]):
-                origin_image[i][j][0] = image[i][j]
+        if channel == 'y':
+            for i in range(origin_image.shape[0]):
+                for j in range(origin_image.shape[1]):
+                    origin_image[i][j][0] = image[i][j]
+                    
+        elif channel == 'ycrcb':
+            for i in range(origin_image.shape[0]):
+                for j in range(origin_image.shape[1]):
+                    origin_image[i][j][0] = image[0][i][j]
+                    origin_image[i][j][1] = image[1][i][j]
+                    origin_image[i][j][2] = image[2][i][j]
+        else:
+            raise ValueError("Please input right channel between y and ycrcb")
 
         ret_img = ImageSet.ycbcr2bgr(origin_image)
         return ret_img
@@ -102,8 +119,14 @@ class ImageSet(torch.utils.data.Dataset):
             zoom_image = cv2.pyrDown(origin_image, (200, 200))
             zoom_image = cv2.pyrUp(zoom_image, (400, 400))
         input_image = zoom_image
-        data = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-        label = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+        data_y = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+        data_cr = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
+        data_cb = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
+        label_y = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+        label_cr = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
+        label_cb = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
+        data = torch.cat((data_y, data_cr, data_cb), dim=0)
+        label = torch.cat((label_y, label_cr, label_cb), dim=0)
         return data, label
 
     def __len__(self):
