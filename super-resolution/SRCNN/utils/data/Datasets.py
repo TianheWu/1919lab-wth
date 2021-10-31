@@ -97,9 +97,11 @@ class ImageSet(torch.utils.data.Dataset):
         """
         :return: The noise image and label.
         """
-        origin_image = cv2.imread(self.imgs[index])
-        zoom_image = cv2.pyrDown(origin_image, (origin_image.shape[0] // 2, origin_image.shape[1] // 2))
-        input_image = ImageSet.resize_img(zoom_image, (origin_image.shape[0], origin_image.shape[1]))
+        origin_image = ImageSet.resize_img(cv2.imread(self.imgs[index]), (400, 400))
+        for _ in range(10):
+            zoom_image = cv2.pyrDown(origin_image, (200, 200))
+            zoom_image = cv2.pyrUp(zoom_image, (400, 400))
+        input_image = zoom_image
         data = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
         label = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
         return data, label
