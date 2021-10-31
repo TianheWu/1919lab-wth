@@ -3,6 +3,7 @@
 
 ## Computer Vision
 ### Super-Resolution
+- [Weekwork13 - SRCNN and New data augment of robot grasping](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A513%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.29.md)
 
 ### Real-time Generation of Crawling Network
 - [Weekwork5 - RSS Paper Closing the Loop for Robotic Grasping](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A55%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.9.5.md)
@@ -10,6 +11,7 @@
   - [Weekwork10 - More Details about ggcnn Code](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A510%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.10.md)
 - [Weekwork11 - Change net and knowledge distillation and assisted learning](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A511%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.17.md)
 - [Weekwork12 - MixMatch SSL](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A512%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.24.md)
+- [Weekwork13 - SRCNN and New data augment of robot grasping](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A513%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.29.md)
 ### Semantic Segmentation
 - [Weekwork6 - PSPNet Paper](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A56%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.9.12.md)
 - [Weekwork7 - ResNet Paper](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A57%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.9.19.md)
