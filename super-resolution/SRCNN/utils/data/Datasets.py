@@ -10,11 +10,12 @@ from skimage import img_as_float, img_as_ubyte
 
 
 class ImageSet(torch.utils.data.Dataset):
-    def __init__(self, img, start=0.0, end=1.0):
+    def __init__(self, img, args, start=0.0, end=1.0):
         """
         :param img: The file path of datasets.
         """
         super(ImageSet, self).__init__()
+        self.args = args
         self.imgs = [os.path.join(img, file).replace('\\', '/') for file in os.listdir(img) if ImageSet.is_img_file(file)]
         length = len(self.imgs)
         if length == 0:
@@ -97,7 +98,7 @@ class ImageSet(torch.utils.data.Dataset):
             for i in range(origin_image.shape[0]):
                 for j in range(origin_image.shape[1]):
                     origin_image[i][j][0] = image[i][j]
-                    
+
         elif channel == 'ycrcb':
             for i in range(origin_image.shape[0]):
                 for j in range(origin_image.shape[1]):
@@ -119,14 +120,21 @@ class ImageSet(torch.utils.data.Dataset):
             zoom_image = cv2.pyrDown(origin_image, (200, 200))
             zoom_image = cv2.pyrUp(zoom_image, (400, 400))
         input_image = zoom_image
-        data_y = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-        data_cr = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
-        data_cb = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
-        label_y = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-        label_cr = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
-        label_cb = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
-        data = torch.cat((data_y, data_cr, data_cb), dim=0)
-        label = torch.cat((label_y, label_cr, label_cb), dim=0)
+        if self.args.num_channels == 3:
+            data_y = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+            data_cr = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
+            data_cb = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
+            label_y = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+            label_cr = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
+            label_cb = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
+            data = torch.cat((data_y, data_cr, data_cb), dim=0)
+            label = torch.cat((label_y, label_cr, label_cb), dim=0)
+        elif self.args.num_channels == 1:
+            data = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+            label = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
+        else:
+            raise ValueError("Please input right channels between 3 and 1")
+            
         return data, label
 
     def __len__(self):
