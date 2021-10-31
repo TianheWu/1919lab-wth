@@ -26,15 +26,13 @@ def parse_args():
     parser.add_argument('--outdir', type=str, required=True)
     parser.add_argument('--scale', type=int, default=3)
     parser.add_argument('--lr', type=float, default=1e-4)
-    parser.add_argument('--batch-size', type=int, default=2)
-    parser.add_argument('--num-epochs', type=int, default=100)
-    parser.add_argument('--batches-per-epoch', type=int, default=160)
-    parser.add_argument('--val-batches', type=int, default=160)
+    parser.add_argument('--batch-size', type=int, default=16)
+    parser.add_argument('--num-epochs', type=int, default=20)
+    parser.add_argument('--batches-per-epoch', type=int, default=20)
+    parser.add_argument('--val-batches', type=int, default=20)
     parser.add_argument('--num-workers', type=int, default=2)
     parser.add_argument('--seed', type=int, default=123)
     parser.add_argument('--use-gpu', type=bool, default=True)
-
-    # python train_srcnn.py --dataset-train dataset/images/train --dataset-test dataset/images/test --outdir output
 
     args = parser.parse_args()
     return args
@@ -69,19 +67,16 @@ def train(epoch, net, device, train_data, optimizer, criterion, batches_per_epoc
             batch_idx += 1
             if batch_idx >= batches_per_epoch:
                 break
-            print('x shape: ', x.shape)
-            print('y.shape: ', y.shape)
             x = x.to(device)
             y = y.to(device)
             pred = net(x)
-            print('pred.shape: ', pred.shape)
             loss = criterion(pred, y)
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            if batch_idx % 8 == 0:
+            if batch_idx % 16 == 0:
                 logging.info('Epoch: {}, Batch: {}, Loss: {:0.4f}'.format(epoch, batch_idx, loss.item()))
             results += loss.item()
 
@@ -93,9 +88,9 @@ def run():
     args = parse_args()
     if not os.path.exists(args.outdir):
         os.makedirs(args.outdir)
-
     if args.use_gpu and torch.cuda.is_available():
         device = torch.device('cuda:0')
+        cudnn.benchmark = True
     else:
         device = torch.device('cpu')
     
@@ -115,23 +110,26 @@ def run():
         num_workers=args.num_workers
     )
     logging.info('Done')
-
     logging.info('Loading Network...')
     torch.manual_seed(args.seed)
     in_channels = 1
     net = SRCNN(in_channels=in_channels).to(device)
     criterion = F.mse_loss
     optimizer = optim.Adam(net.parameters(), lr=args.lr)
+    logging.info('Done')
 
     best_result = 0.0
     for epoch in range(args.num_epochs):
         logging.info('Beginning Epoch {:02d}'.format(epoch))
         train_results = train(epoch, net, device, train_data, optimizer, criterion, args.batches_per_epoch)
         test_results = validate(net, device, val_data, criterion, args.val_batches)
-        if test_results > best_result or epoch == 0:
+        if test_results > best_result or epoch == 0 or (epoch % 10 == 0):
             torch.save(net, os.path.join(args.outdir, 'epoch%02d_loss_%0.2f' % (epoch, test_results)))
             torch.save(net.state_dict(), os.path.join(args.outdir, 'epoch%02d_loss_%0.2f_statedict.pt' % (epoch, test_results)))
             best_result = test_results
 
 if __name__ == '__main__':
+    """
+    :run: python train_srcnn.py --dataset-train dataset/images/train --dataset-test dataset/images/test --outdir output
+    """
     run()

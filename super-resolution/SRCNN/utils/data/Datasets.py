@@ -52,12 +52,20 @@ class ImageSet(torch.utils.data.Dataset):
         :return: Wheter is is an image, type boolean.
         """
         return any([img.endswith(extension) for extension in [".jpg", ".png", ".jpeg"]])
+    
+    @staticmethod
+    def resize_img(img, size=(300, 300)):
+        """
+        :param img: Image opencv-imread image.
+        :return: After resizing image.
+        """
+        return cv2.resize(img, size, interpolation=cv2.INTER_CUBIC)
 
     def __getitem__(self, index):
         """
         :return: The noise image and label.
         """
-        origin_image = cv2.imread(self.imgs[index])
+        origin_image = ImageSet.resize_img(cv2.imread(self.imgs[index]))
         skimg = ImageSet.open2sk(origin_image)
         noise_skimg = skimage.util.random_noise(skimg, mode='gaussian')
         noise_opimg = ImageSet.sk2open(noise_skimg)
