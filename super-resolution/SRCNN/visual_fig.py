@@ -14,7 +14,7 @@ def visual(img):
     origin_image = cv2.imread(img)
     origin_image = ImageSet.resize_img(origin_image, (500, 500))
     cv2.imwrite('bicubic.jpg', origin_image)
-    image_channel = ImageSet.extract_channel(origin_image)
+    image_channel = ImageSet.extract_channel(origin_image, channel='ycrcb')
     net = SRCNN(3)
     model_path = "output/epoch149_loss_0.0465_statedict.pt"
     net.load_state_dict(torch.load(model_path, map_location='cpu'), strict=False)

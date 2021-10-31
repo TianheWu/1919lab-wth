@@ -96,8 +96,8 @@ def run():
         device = torch.device('cpu')
     
     logging.info('Loading Dataset...')
-    train_dataset = ImageSet(args.dataset_train, start=0.0, end=args.split)
-    val_dataset = ImageSet(args.dataset_train, start=args.split, end=1.0)
+    train_dataset = ImageSet(args.dataset_train, start=0.0, end=args.split, args=args)
+    val_dataset = ImageSet(args.dataset_train, start=args.split, end=1.0, args=args)
     train_data = torch.utils.data.DataLoader(
         train_dataset,
         batch_size=args.batch_size,

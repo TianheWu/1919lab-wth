@@ -10,7 +10,7 @@ from skimage import img_as_float, img_as_ubyte
 
 
 class ImageSet(torch.utils.data.Dataset):
-    def __init__(self, img, args, start=0.0, end=1.0):
+    def __init__(self, img, start=0.0, end=1.0, args=None):
         """
         :param img: The file path of datasets.
         """
@@ -134,7 +134,7 @@ class ImageSet(torch.utils.data.Dataset):
             label = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
         else:
             raise ValueError("Please input right channels between 3 and 1")
-            
+
         return data, label
 
     def __len__(self):
