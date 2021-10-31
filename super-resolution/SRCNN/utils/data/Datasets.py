@@ -15,7 +15,7 @@ class ImageSet(torch.utils.data.Dataset):
         :param img: The file path of datasets.
         """
         super(ImageSet, self).__init__()
-        self.imgs = [os.path.join(img, file).replace('\\', '/') for file in os.listdir(img) if ImageSet.is_img(file)]
+        self.imgs = [os.path.join(img, file).replace('\\', '/') for file in os.listdir(img) if ImageSet.is_img_file(file)]
         length = len(self.imgs)
         if length == 0:
             raise FileNotFoundError('No dataset files found. Check path: {}'.format(img))
@@ -41,25 +41,57 @@ class ImageSet(torch.utils.data.Dataset):
     def bgr2ycbcr(img):
         """
         :param img: Imread image.
-        :return: YCBcr color.
+        :return: Ycbcr color.
         """
         return cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
+    
+    @staticmethod
+    def ycbcr2bgr(img):
+        """
+        :param img: Imread image.
+        :return: BGR color.
+        """
+        return cv2.cvtColor(img, cv2.COLOR_YCrCb2BGR)
 
     @staticmethod
-    def is_img(img):
+    def is_img_file(img_path):
         """
         :param img: Image file path.
         :return: Wheter is is an image, type boolean.
         """
-        return any([img.endswith(extension) for extension in [".jpg", ".png", ".jpeg"]])
+        return any([img_path.endswith(extension) for extension in [".jpg", ".png", ".jpeg"]])
     
     @staticmethod
-    def resize_img(img, size=(300, 300)):
+    def resize_img(img, size=(500, 500)):
         """
         :param img: Image opencv-imread image.
         :return: After resizing image.
         """
         return cv2.resize(img, size, interpolation=cv2.INTER_CUBIC)
+    
+    @staticmethod
+    def extract_channel(img, channel='y'):
+        """
+        :param img: The image you want to extract.
+        :return: The image extracted channel.
+        """
+        if channel in ('y', 'cb', 'cr'):
+            img = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
+        return img
+    
+    @staticmethod
+    def instead_channel(origin_img, image):
+        """
+        :param img: The image you want to restore.
+        :return: The image restored.
+        """
+        origin_image = ImageSet.bgr2ycbcr(origin_img)
+        for i in range(origin_image.shape[0]):
+            for j in range(origin_image.shape[1]):
+                origin_image[i][j][0] = image[i][j]
+
+        ret_img = ImageSet.ycbcr2bgr(origin_image)
+        return ret_img
 
     def __getitem__(self, index):
         """

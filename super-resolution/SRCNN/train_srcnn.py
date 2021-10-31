@@ -27,10 +27,10 @@ def parse_args():
     parser.add_argument('--scale', type=int, default=3)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--batch-size', type=int, default=16)
-    parser.add_argument('--num-epochs', type=int, default=20)
-    parser.add_argument('--batches-per-epoch', type=int, default=20)
-    parser.add_argument('--val-batches', type=int, default=20)
-    parser.add_argument('--num-workers', type=int, default=2)
+    parser.add_argument('--num-epochs', type=int, default=50)
+    parser.add_argument('--batches-per-epoch', type=int, default=50)
+    parser.add_argument('--val-batches', type=int, default=50)
+    parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--seed', type=int, default=123)
     parser.add_argument('--use-gpu', type=bool, default=True)
 
@@ -76,7 +76,7 @@ def train(epoch, net, device, train_data, optimizer, criterion, batches_per_epoc
             loss.backward()
             optimizer.step()
 
-            if batch_idx % 16 == 0:
+            if batch_idx % 10 == 0:
                 logging.info('Epoch: {}, Batch: {}, Loss: {:0.4f}'.format(epoch, batch_idx, loss.item()))
             results += loss.item()
 
@@ -124,8 +124,8 @@ def run():
         train_results = train(epoch, net, device, train_data, optimizer, criterion, args.batches_per_epoch)
         test_results = validate(net, device, val_data, criterion, args.val_batches)
         if test_results > best_result or epoch == 0 or (epoch % 10 == 0):
-            torch.save(net, os.path.join(args.outdir, 'epoch%02d_loss_%0.2f' % (epoch, test_results)))
-            torch.save(net.state_dict(), os.path.join(args.outdir, 'epoch%02d_loss_%0.2f_statedict.pt' % (epoch, test_results)))
+            torch.save(net, os.path.join(args.outdir, 'epoch%02d_loss_%0.4f' % (epoch, test_results)))
+            torch.save(net.state_dict(), os.path.join(args.outdir, 'epoch%02d_loss_%0.4f_statedict.pt' % (epoch, test_results)))
             best_result = test_results
 
 if __name__ == '__main__':
