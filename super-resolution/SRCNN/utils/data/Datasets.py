@@ -145,16 +145,12 @@ class ImageSet(torch.utils.data.Dataset):
         """
         origin_image = cv2.imread(self.imgs[index])
         noise_image = ImageSet.add_noise(origin_image)
-        if self.eval:
-            data = ImageSet.extract_channel(noise_image, channel=self.args.num_channels)
-            label = ImageSet.extract_channel(origin_image, channel=self.args.num_channels)
-        else:
-            center_y, center_x = ImageSet.center(origin_image)
-            y1 = center_y - 10; y2 = center_y + 10
-            x1 = center_x - 10; x2 = center_x + 10
-            central_image = ImageSet.crop(origin_image, y1, y2, x1, x2)
-            data = ImageSet.extract_channel(noise_image, channel=self.args.num_channels)
-            label = ImageSet.extract_channel(central_image, channel=self.args.num_channels)
+        center_y, center_x = ImageSet.center(origin_image)
+        y1 = center_y - 10; y2 = center_y + 10
+        x1 = center_x - 10; x2 = center_x + 10
+        central_image = ImageSet.crop(origin_image, y1, y2, x1, x2)
+        data = ImageSet.extract_channel(noise_image, channel=self.args.num_channels)
+        label = ImageSet.extract_channel(central_image, channel=self.args.num_channels)
         return data, label
 
     def __len__(self):
