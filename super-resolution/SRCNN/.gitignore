@@ -1,4 +1,5 @@
 dataset/*
+aug_dataset/*
 output/*
 
 *.jpg
