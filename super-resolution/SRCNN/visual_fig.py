@@ -14,16 +14,16 @@ def visual(img):
     origin_image = cv2.imread(img)
     origin_image = ImageSet.resize_img(origin_image, (500, 500))
     cv2.imwrite('bicubic.jpg', origin_image)
-    image_channel = ImageSet.extract_channel(origin_image, channel='ycrcb')
+    image_channel = ImageSet.extract_channel(origin_image, channel='y')
     net = SRCNN(3)
-    model_path = "output/epoch99_loss_0.0517_statedict.pt"
+    model_path = "output/epoch149_loss_0.0810_statedict.pt"
     net.load_state_dict(torch.load(model_path, map_location='cpu'), strict=False)
     net.eval()
     with torch.no_grad():
         pred_fig_channel = net(image_channel.unsqueeze(0))
     pred_fig_channel = pred_fig_channel.squeeze(0).detach().numpy() * 255
-    print("shape: ", pred_fig_channel.shape)
-    ret_fig = ImageSet.instead_channel(origin_image, pred_fig_channel, channel='ycrcb')
+    ret_fig = ImageSet.instead_channel(origin_image, pred_fig_channel, channel='y')
+
     cv2.imwrite('srcnn.jpg', ret_fig)
 
 
