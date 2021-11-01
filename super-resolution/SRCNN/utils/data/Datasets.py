@@ -5,6 +5,7 @@ import os
 import copy
 import skimage
 import numpy as np
+import skimage.util
 
 from skimage import img_as_float, img_as_ubyte
 
@@ -25,7 +26,7 @@ class ImageSet(torch.utils.data.Dataset):
     @staticmethod
     def open2sk(img):
         """
-        :param img: Any openCV image.
+        :param img: Any open-cv image.
         :return: skimage image.
         """
         return img_as_float(img)
@@ -41,16 +42,16 @@ class ImageSet(torch.utils.data.Dataset):
     @staticmethod
     def bgr2ycbcr(img):
         """
-        :param img: Imread image.
-        :return: Ycbcr color.
+        :param img: Any open-cv image.
+        :return: Ycbcr color image.
         """
         return cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
     
     @staticmethod
     def ycbcr2bgr(img):
         """
-        :param img: Imread image.
-        :return: BGR color.
+        :param img: Any open-cv image.
+        :return: BGR color image.
         """
         return cv2.cvtColor(img, cv2.COLOR_YCrCb2BGR)
 
@@ -65,15 +66,34 @@ class ImageSet(torch.utils.data.Dataset):
     @staticmethod
     def resize_img(img, size=(500, 500)):
         """
-        :param img: Image opencv-imread image.
+        :param img: Any open-cv image.
+        :param size: The size of image you want to resize.
         :return: After resizing image.
         """
         return cv2.resize(img, size, interpolation=cv2.INTER_CUBIC)
     
     @staticmethod
+    def add_noise(img, method='gaussian'):
+        """
+        :param img: Any opencv-type image.
+        :return: Image with gaussian_noise.
+        """
+        img = ImageSet.open2sk(img)
+        return ImageSet.sk2open(skimage.util.random_noise(img, mode=method, var=0.01))
+
+    @staticmethod
+    def crop(img, y1, y2, x1, x2):
+        """
+        :param img: Any open-cv image.
+        :param size: The croping size.
+        :return: Croped image.
+        """
+        return img[y1:y2, x1:x2]
+
+    @staticmethod
     def extract_channel(img, channel='y'):
         """
-        :param img: The image you want to extract.
+        :param img: Any open-cv image.
         :return: The image extracted channel.
         """
         if channel == 'y':
@@ -114,7 +134,7 @@ class ImageSet(torch.utils.data.Dataset):
         """
         :return: The noise image and label.
         """
-        origin_image = ImageSet.resize_img(cv2.imread(self.imgs[index]), (400, 400))
+        origin_image = ImageSet.resize_img(cv2.imread(self.imgs[index]), (32, 32))
         zoom_image = cv2.pyrDown(origin_image, (100, 100))
         zoom_image = ImageSet.resize_img(zoom_image, (400, 400))
         input_image = zoom_image
