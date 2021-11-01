@@ -116,7 +116,7 @@ class ImageSet(torch.utils.data.Dataset):
         """
         origin_image = ImageSet.resize_img(cv2.imread(self.imgs[index]), (400, 400))
         zoom_image = cv2.pyrDown(origin_image, (100, 100))
-        zoom_image = cv2.pyrUp(zoom_image, (400, 400))
+        zoom_image = ImageSet.resize_img(zoom_image, (400, 400))
         input_image = zoom_image
         if self.args.num_channels == 3:
             data_y = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
