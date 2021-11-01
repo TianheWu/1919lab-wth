@@ -10,11 +10,12 @@ from skimage import img_as_float, img_as_ubyte
 
 
 class ImageSet(torch.utils.data.Dataset):
-    def __init__(self, img, start=0.0, end=1.0, args=None):
+    def __init__(self, img, start=0.0, end=1.0, eval=False, args=None):
         """
         :param img: The file path of datasets.
         """
         super(ImageSet, self).__init__()
+        self.eval = eval
         self.args = args
         self.imgs = [os.path.join(img, file).replace('\\', '/') for file in os.listdir(img) if ImageSet.is_img_file(file)]
         length = len(self.imgs)
@@ -144,12 +145,16 @@ class ImageSet(torch.utils.data.Dataset):
         """
         origin_image = cv2.imread(self.imgs[index])
         noise_image = ImageSet.add_noise(origin_image)
-        center_y, center_x = ImageSet.center(origin_image)
-        y1 = center_y - 10; y2 = center_y + 9
-        x1 = center_x - 10; x2 = center_x + 9
-        central_image = ImageSet.crop(origin_image, y1, y2, x1, x2)
-        data = ImageSet.extract_channel(noise_image, channel=self.args.num_channels)
-        label = ImageSet.extract_channel(central_image, channel=self.args.num_channels)
+        if self.eval:
+            data = ImageSet.extract_channel(noise_image, channel=self.args.num_channels)
+            label = ImageSet.extract_channel(origin_image, channel=self.args.num_channels)
+        else:
+            center_y, center_x = ImageSet.center(origin_image)
+            y1 = center_y - 10; y2 = center_y + 10
+            x1 = center_x - 10; x2 = center_x + 10
+            central_image = ImageSet.crop(origin_image, y1, y2, x1, x2)
+            data = ImageSet.extract_channel(noise_image, channel=self.args.num_channels)
+            label = ImageSet.extract_channel(central_image, channel=self.args.num_channels)
         return data, label
 
     def __len__(self):

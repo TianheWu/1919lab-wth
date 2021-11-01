@@ -10,7 +10,6 @@ import torch.nn.functional as F
 from torch import nn
 from models.model import SRCNN
 from utils.data.Datasets import ImageSet
-from tqdm import tqdm
 from math import log10
 
 
@@ -64,7 +63,7 @@ def train(epoch, net, device, train_data, optimizer, criterion, batches_per_epoc
     results = 0
     batch_idx = 0
     while batch_idx < batches_per_epoch:
-        for x, y in tqdm(train_data):
+        for x, y in train_data:
             batch_idx += 1
             if batch_idx >= batches_per_epoch:
                 break
@@ -96,8 +95,8 @@ def run():
         device = torch.device('cpu')
     
     logging.info('Loading Dataset...')
-    train_dataset = ImageSet(args.dataset_train, start=0.0, end=args.split, args=args)
-    val_dataset = ImageSet(args.dataset_train, start=args.split, end=1.0, args=args)
+    train_dataset = ImageSet(args.dataset_train, start=0.0, end=args.split, eval=False, args=args)
+    val_dataset = ImageSet(args.dataset_train, start=args.split, end=1.0, eval=True, args=args)
     train_data = torch.utils.data.DataLoader(
         train_dataset,
         batch_size=args.batch_size,
@@ -118,7 +117,7 @@ def run():
     optimizer = optim.SGD(net.parameters(), lr=args.lr)
     logging.info('Done')
 
-    best_result = 0.0
+    best_result = 1
     for epoch in range(args.num_epochs):
         logging.info('Beginning Epoch {:02d}'.format(epoch))
         train_results = train(epoch, net, device, train_data, optimizer, criterion, args.batches_per_epoch)
