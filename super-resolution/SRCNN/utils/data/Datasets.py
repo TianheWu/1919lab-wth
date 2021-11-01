@@ -2,7 +2,6 @@ import torch
 import torch.utils.data
 import cv2
 import os
-import copy
 import skimage
 import numpy as np
 import skimage.util
@@ -89,16 +88,24 @@ class ImageSet(torch.utils.data.Dataset):
         :return: Croped image.
         """
         return img[y1:y2, x1:x2]
+    
+    @staticmethod
+    def center(img):
+        """
+        :param img: Any open-cv image.
+        :return: The image center location (y, x).
+        """
+        return img.shape[0] // 2, img.shape[1] // 2
 
     @staticmethod
-    def extract_channel(img, channel='y'):
+    def extract_channel(img, channel=1):
         """
         :param img: Any open-cv image.
         :return: The image extracted channel.
         """
-        if channel == 'y':
+        if channel == 1:
             ret = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-        elif channel == 'ycrcb':
+        elif channel == 3:
             data_y = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
             data_cr = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
             data_cb = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
@@ -110,7 +117,8 @@ class ImageSet(torch.utils.data.Dataset):
     @staticmethod
     def instead_channel(origin_img, image, channel='y'):
         """
-        :param img: The image you want to restore.
+        :param origin_img: The image you want to restore.
+        :param image: The goal image.
         :return: The image restored.
         """
         origin_image = ImageSet.bgr2ycbcr(origin_img)
@@ -134,25 +142,14 @@ class ImageSet(torch.utils.data.Dataset):
         """
         :return: The noise image and label.
         """
-        origin_image = ImageSet.resize_img(cv2.imread(self.imgs[index]), (32, 32))
-        zoom_image = cv2.pyrDown(origin_image, (100, 100))
-        zoom_image = ImageSet.resize_img(zoom_image, (400, 400))
-        input_image = zoom_image
-        if self.args.num_channels == 3:
-            data_y = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-            data_cr = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
-            data_cb = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
-            label_y = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-            label_cr = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 1].astype(np.float32)).unsqueeze(0) / 255
-            label_cb = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
-            data = torch.cat((data_y, data_cr, data_cb), dim=0)
-            label = torch.cat((label_y, label_cr, label_cb), dim=0)
-        elif self.args.num_channels == 1:
-            data = torch.from_numpy(ImageSet.bgr2ycbcr(input_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-            label = torch.from_numpy(ImageSet.bgr2ycbcr(origin_image)[:, :, 0].astype(np.float32)).unsqueeze(0) / 255
-        else:
-            raise ValueError("Please input right channels between 3 and 1")
-
+        origin_image = cv2.imread(self.imgs[index])
+        noise_image = ImageSet.add_noise(origin_image)
+        center_y, center_x = ImageSet.center(origin_image)
+        y1 = center_y - 10; y2 = center_y + 9
+        x1 = center_x - 10; x2 = center_x + 9
+        central_image = ImageSet.crop(origin_image, y1, y2, x1, x2)
+        data = ImageSet.extract_channel(noise_image, channel=self.args.num_channels)
+        label = ImageSet.extract_channel(central_image, channel=self.args.num_channels)
         return data, label
 
     def __len__(self):

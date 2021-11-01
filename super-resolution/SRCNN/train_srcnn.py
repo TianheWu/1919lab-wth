@@ -130,6 +130,6 @@ def run():
 
 if __name__ == '__main__':
     """
-    :run: python train_srcnn.py --dataset-train dataset --dataset-test dataset --outdir output
+    :run: python train_srcnn.py --dataset-train aug_dataset --dataset-test aug_dataset --outdir output
     """
     run()
