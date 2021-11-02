@@ -112,30 +112,30 @@ class ImageSet(torch.utils.data.Dataset):
             data_cb = torch.from_numpy(ImageSet.bgr2ycbcr(img)[:, :, 2].astype(np.float32)).unsqueeze(0) / 255
             ret = torch.cat((data_y, data_cr, data_cb), dim=0)
         else:
-            raise ValueError("Please input right channel between y and ycrcb")
+            raise ValueError("Please input right channel between 1 and 3")
         return ret
     
     @staticmethod
-    def instead_channel(origin_img, image, channel='y'):
+    def instead_channel(origin_img, image, channel=1):
         """
         :param origin_img: The image you want to restore.
         :param image: The goal image.
         :return: The image restored.
         """
         origin_image = ImageSet.bgr2ycbcr(origin_img)
-        if channel == 'y':
+        if channel == 1:
             for i in range(origin_image.shape[0]):
                 for j in range(origin_image.shape[1]):
                     origin_image[i][j][0] = image[i][j]
 
-        elif channel == 'ycrcb':
+        elif channel == 3:
             for i in range(origin_image.shape[0]):
                 for j in range(origin_image.shape[1]):
                     origin_image[i][j][0] = image[0][i][j]
                     origin_image[i][j][1] = image[1][i][j]
                     origin_image[i][j][2] = image[2][i][j]
         else:
-            raise ValueError("Please input right channel between y and ycrcb")
+            raise ValueError("Please input right channel between 1 and 3")
         ret_img = ImageSet.ycbcr2bgr(origin_image)
         return ret_img
 

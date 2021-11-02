@@ -10,32 +10,21 @@ def visual(img):
     :return: After SRCNN model processing.
     """
     origin_image = cv2.imread(img)
-    origin_image = ImageSet.resize_img(origin_image, (6000, 6000))
+    height = origin_image.shape[0]
+    width = origin_image.shape[1]
+    origin_image = ImageSet.resize_img(origin_image, (200, 200))
     cv2.imwrite('bicubic.jpg', origin_image)
-    image_channel = ImageSet.extract_channel(origin_image, channel='y')
+    image_channel = ImageSet.extract_channel(origin_image, channel=1)
     net = SRCNN(1)
-    model_path = "output/epoch199_loss_0.0445_statedict.pt"
+    model_path = "output/epoch199_loss_0.0003_statedict.pt"
     net.load_state_dict(torch.load(model_path, map_location='cpu'), strict=False)
     net.eval()
     with torch.no_grad():
         pred_fig_channel = net(image_channel.unsqueeze(0))
     pred_fig_channel = pred_fig_channel.squeeze(0).squeeze(0).detach().numpy() * 255
-    ret_fig = ImageSet.instead_channel(origin_image, pred_fig_channel, channel='y')
-
+    ret_fig = ImageSet.instead_channel(origin_image, pred_fig_channel, channel=1)
     cv2.imwrite('srcnn.jpg', ret_fig)
 
 
-def check_channel(img):
-    pass
-
-
-img = 'dataset/images/train/15088.jpg'
-# img = cv2.imread(img)
-# img = ImageSet.resize_img(img, (200, 200))
-# cv2.imwrite("origin.jpg", img)
-# print("img shape: ", img.shape)
-# img = ImageSet.bgr2ycbcr(img)
-# print("img shape: ", img.shape)
-# cv2.imshow('img: ', img)
-# cv2.waitKey(0)
+img = 'origin.jpg'
 visual(img)
