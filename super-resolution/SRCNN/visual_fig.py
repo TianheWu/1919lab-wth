@@ -12,7 +12,7 @@ def visual(img):
     origin_image = cv2.imread(img)
     height = origin_image.shape[0]
     width = origin_image.shape[1]
-    origin_image = ImageSet.resize_img(origin_image, (200, 200))
+    origin_image = ImageSet.resize_img(origin_image, (1500, 1500))
     cv2.imwrite('bicubic.jpg', origin_image)
     image_channel = ImageSet.extract_channel(origin_image, channel=1)
     net = SRCNN(1)
@@ -26,5 +26,8 @@ def visual(img):
     cv2.imwrite('srcnn.jpg', ret_fig)
 
 
-img = 'origin.jpg'
-visual(img)
+img = '1.jpg'
+image = cv2.imread(img)
+print(image.shape)
+print(type(image))
+# visual(img)
