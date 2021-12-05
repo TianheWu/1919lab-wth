@@ -6,6 +6,7 @@
 - [Weekwork13 - SRCNN and New data augment of robot grasping](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A513%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.29.md)
 - [Weekwork14 - GAN and SRCNN thinking](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A514%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.11.7.md)
 - [Weekwork17 - SRGAN](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A517%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.11.28.md)
+- [Weekwork18 - Transformer improving](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A518%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.12.5.md)
 
 ### Real-time Generation of Crawling Network
 - [Weekwork5 - RSS Paper Closing the Loop for Robotic Grasping](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A55%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.9.5.md)
