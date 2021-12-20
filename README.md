@@ -5,7 +5,7 @@
 ### Image Quaility Assessment
 - [Weekwork18 - Transformer improving summary1](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A518%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.12.5.md)
 - [Weekwork19 - Transformer in IQA and innovation thinking](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A519%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.12.12.md)
-- [Weekwork20 - Transformer in IQA paper read](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A520%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.12.19.md)
+- [Weekwork20 - VTAMIQ](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A520%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.12.19.md)
 
 ### Super-Resolution
 - [Weekwork13 - SRCNN and New data augment of robot grasping](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A513%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.10.29.md)
