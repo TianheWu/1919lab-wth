@@ -1,6 +1,4 @@
-# 1919 my weekwork 
-> Record my SIGS weekwork.
-
+# My weekwork in SIGS-1919-lab
 ## Computer Vision
 ### Image Quaility Assessment
 - [Weekwork18 - Transformer improving summary1](https://github.com/TianheWu/tsinghua-weekwork/blob/master/%E5%91%A8%E6%8A%A5/%E5%91%A8%E6%8A%A518%20%E5%90%B4%E5%A4%A9%E9%B9%A4%202021.12.5.md)
